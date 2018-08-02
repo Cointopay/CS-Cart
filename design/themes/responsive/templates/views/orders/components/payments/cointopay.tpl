@@ -1,0 +1,1 @@
+<p>You will redirect to cointopay.com to pay.</p>

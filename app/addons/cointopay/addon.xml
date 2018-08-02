@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<addon scheme='3.0'>
+    <id>cointopay</id>
+    <version>1.0</version>
+    <name>Cointopay Payment Method</name>
+    <description>Pay through cointopay.com</description>
+    <has_icon>Y</has_icon>
+    <priority>106</priority>
+    <status>active</status>
+    <settings>
+    <sections>
+        <section id="general">
+            <items>
+                <item id="cointopay_config">
+                        <type>template</type>
+                        <default_value>config.tpl</default_value>
+                </item>
+                <item id="cointopay_uploader_settings">
+                        <type>template</type>
+                        <default_value>logo.tpl</default_value>
+                </item>
+            </items>
+        </section>
+    </sections>
+</settings>
+<queries>
+        <item type="file">database/data.sql</item>
+</queries>
+<functions>
+        <item for="uninstall">fn_cointopay_delete_payment_processors</item>
+</functions>
+</addon>

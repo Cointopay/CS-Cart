@@ -1,0 +1,1 @@
+INSERT INTO ?:payment_processors (processor, processor_script, processor_template, admin_template, callback, type, addon) VALUES ('Cointopay', 'cointopay.php', 'views/orders/components/payments/cointopay.tpl', 'cointopay.tpl', 'N', 'P', 'cointopay');
