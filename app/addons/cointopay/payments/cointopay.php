@@ -18,50 +18,72 @@ if (defined('PAYMENT_NOTIFICATION'))
 
         $pp_response["transaction_id"] = $transactionID;
         $order_id = $orderID;
-         
-        //if paid
-        if($paymentStatus == 'paid' && $notEngough == '0')
+        if(isset($_GET['ConfirmCode']))
         {
-            $pp_response["order_status"] ='C';
-            $Notification = "Congartulations! Your order has been completed.";
-            $type = "I";
-        }
-    
-        else if ($paymentStatus == 'paid' || $notEngough == '1') 
-        {
-            $pp_response["order_status"] = 'P';
-            $pp_response["reason_text"] = "Paid Notenough";
-            $Notification = "Your order hase been placed but there was problem with your payment (notenough). Please, contact site admin.";
-            $type = "O";
-        } 
-        elseif ($paymentStatus == 'failed') 
-        {
-            $pp_response["order_status"] = 'F';
-            $pp_response["reason_text"] = "The payment transaction failed";
-            $Notification = "Sorry! Your payment failed!";
-            $type = "O";
+           $pp = fn_cointopay_get_processor_params();
+           $data = [
+                       'mid' => $pp['merchant_id'] ,
+                       'TransactionID' =>  $transactionID ,
+                       'ConfirmCode' => $_GET['ConfirmCode']
+                   ];
+           $response = fn_cointopay_validate_order($data);
+           
+           if($response->Status !== $_GET['status'])
+           {
+               echo "We have detected different order status. Your order has been halted.";
+               exit;
+           }
+           if($response->CustomerReferenceNr == $_GET['CustomerReferenceNr'])
+           {
+                //if paid
+                if($paymentStatus == 'paid' && $notEngough == '0')
+                {
+                    $pp_response["order_status"] ='C';
+                    $Notification = "Congartulations! Your order has been completed.";
+                    $type = "I";
+                }
+            
+                else if ($paymentStatus == 'paid' || $notEngough == '1') 
+                {
+                    $pp_response["order_status"] = 'P';
+                    $pp_response["reason_text"] = "Paid Notenough";
+                    $Notification = "Your order hase been placed but there was problem with your payment (notenough). Please, contact site admin.";
+                    $type = "O";
+                } 
+                elseif ($paymentStatus == 'failed') 
+                {
+                    $pp_response["order_status"] = 'F';
+                    $pp_response["reason_text"] = "The payment transaction failed";
+                    $Notification = "Sorry! Your payment failed!";
+                    $type = "O";
+                }
+                else
+                {
+                    $pp_response["order_status"] = 'F';
+                    $pp_response["reason_text"] = "The payment transaction failed";
+                    $Notification = "Sorry! Your payment failed!";
+                    $type = "O";
+                }
+                
+                if (fn_check_payment_script('cointopay.php', $order_id)) 
+                {
+                    fn_finish_payment($order_id, $pp_response, false);
+                    fn_set_notification($type,'Order Payment Notification',$Notification);
+                    //fn_redirect("index.php?dispatch=checkout.complete&orderid==$order_id");
+                    fn_order_placement_routines('route', $order_id);
+                }
+           }
         }
         else
         {
-            $pp_response["order_status"] = 'F';
-            $pp_response["reason_text"] = "The payment transaction failed";
-            $Notification = "Sorry! Your payment failed!";
-            $type = "O";
-        }
+            die('We have detected changes in your order. Your order has been halted.');
+        } 
         
-        if (fn_check_payment_script('cointopay.php', $order_id)) 
-        {
-            fn_finish_payment($order_id, $pp_response, false);
-            fn_set_notification($type,'Order Payment Notification',$Notification);
-            //fn_redirect("index.php?dispatch=checkout.complete&orderid==$order_id");
-            fn_order_placement_routines('route', $order_id);
-        }
     }
     exit;
 } 
 else 
 {
-    //fn_url("payment_notification.return?payment=razorpay", AREA, 'current');die();
     $callbackUrl = fn_url("payment_notification.process?payment=cointopay&order_id=".$order_info['order_id']."", AREA, 'current'); 
     $account_info = $order_info['payment_method']['processor_params'];
     // customer have placed the order
@@ -95,3 +117,5 @@ else
     exit;
 }
 exit;
+
+?>
