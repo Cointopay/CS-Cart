@@ -2,7 +2,7 @@
 
 <addon scheme='3.0'>
     <id>cointopay</id>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Cointopay Payment Method</name>
     <description>Pay through cointopay.com</description>
     <has_icon>Y</has_icon>

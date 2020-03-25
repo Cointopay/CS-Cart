@@ -36,6 +36,33 @@ function  fn_cointopay_validate_order($data)
        echo $response;
        exit();
 }
+function  fn_cointopay_transactiondetail($data)
+{
+       $params = array(
+       "authentication:1",
+       'cache-control: no-cache',
+       );
+       $ch = curl_init();
+       curl_setopt_array($ch, array(
+       CURLOPT_URL => 'https://app.cointopay.com/v2REAPI?',
+       //CURLOPT_USERPWD => $this->apikey,
+       CURLOPT_POSTFIELDS => 'Call=Transactiondetail&MerchantID='.$data['mid'].'&output=json&ConfirmCode='.$data['ConfirmCode'].'&APIKey=a',
+       CURLOPT_RETURNTRANSFER => true,
+       CURLOPT_SSL_VERIFYPEER => false,
+       CURLOPT_HTTPHEADER => $params,
+       CURLOPT_USERAGENT => 1,
+       CURLOPT_HTTPAUTH => CURLAUTH_BASIC
+       )
+       );
+       $response = curl_exec($ch);
+       $results = json_decode($response, true);
+       /*if($results->CustomerReferenceNr)
+       {
+           return $results;
+       }*/
+       return $results;
+       exit();
+}
 function fn_cointopay_get_processor_params()
 {
     $processor_params = db_get_field(
@@ -48,5 +75,18 @@ function fn_cointopay_get_processor_params()
     );
 
     return !empty($processor_params) ? unserialize($processor_params) : '';
+}
+function fn_cointopay_calculateRFC2104HMAC($key, $data)
+{
+	$s = hash_hmac('sha256', $data, $key, true);
+
+	return strtoupper(fn_cointopay_base64url_encode($s));
+}
+function fn_cointopay_base64url_encode($data) {
+	return strtoupper(rtrim(strtr(base64_encode($data), '+/', '-_'), '='));
+}
+function fn_cointopay_flash_encode($input)
+{
+	return rawurlencode(utf8_encode($input));
 }
 ?>

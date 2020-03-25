@@ -26,6 +26,18 @@ if (defined('PAYMENT_NOTIFICATION'))
                        'TransactionID' =>  $transactionID ,
                        'ConfirmCode' => $_GET['ConfirmCode']
                    ];
+		    $transactionData = fn_cointopay_transactiondetail($data);
+			if(200 !== $transactionData['status_code']){
+				echo $transactionData['message'];
+				 exit;
+			}
+			$value_data = "MerchantID=" . $transactionData['data']['MerchantID'] . "&AltCoinID=" . $transactionData['data']['AltCoinID'] . "&TransactionID=" . $transactionID . "&coinAddress=" . $transactionData['data']['coinAddress'] . "&CustomerReferenceNr=" . 
+$_GET['CustomerReferenceNr'] . "&SecurityCode=" . $transactionData['data']['SecurityCode'] . "&inputCurrency=" . $transactionData['data']['inputCurrency'];
+            $ConfirmCode = fn_cointopay_calculateRFC2104HMAC($pp['api_key'], $value_data);
+			if($ConfirmCode !== $_GET['ConfirmCode']){
+				echo "Data mismatch! Data doesn\'t match with Cointopay.";
+               exit;
+			}
            $response = fn_cointopay_validate_order($data);
            
            if($response->Status !== $_GET['status'])
@@ -84,7 +96,8 @@ if (defined('PAYMENT_NOTIFICATION'))
 } 
 else 
 {
-    $callbackUrl = fn_url("payment_notification.process?payment=cointopay&order_id=".$order_info['order_id']."", AREA, 'current'); 
+    $callbackUrl = fn_url("payment_notification.process?payment=cointopay&order_id=".$order_info['order_id']."", AREA, 'current');
+	$callbackUrl = fn_cointopay_flash_encode($callbackUrl);
     $account_info = $order_info['payment_method']['processor_params'];
     // customer have placed the order
     $merchantID= $account_info['merchant_id'];
