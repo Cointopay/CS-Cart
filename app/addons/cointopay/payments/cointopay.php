@@ -95,8 +95,7 @@ else
     // customer have placed the order
     $merchantID= $account_info['merchant_id'];
     $securityCode= $account_info['secret_key'];
-	$apiKey= $account_info['api_key'];
-	if (empty($merchantID) || empty($securityCode) || empty($apiKey)){
+	if (empty($merchantID) || empty($securityCode)){
             die('CredentialsMissing');
 	}
     
