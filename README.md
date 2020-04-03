@@ -30,7 +30,6 @@ Required: CSCART Latest Version Installed
     Configure Tab:         
             Add merchant id (requuired)
             Add security code (required)
-			Add api key (required)
 
 all other fields are optional in general Tab
 

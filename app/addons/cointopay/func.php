@@ -76,15 +76,6 @@ function fn_cointopay_get_processor_params()
 
     return !empty($processor_params) ? unserialize($processor_params) : '';
 }
-function fn_cointopay_calculateRFC2104HMAC($key, $data)
-{
-	$s = hash_hmac('sha256', $data, $key, true);
-
-	return strtoupper(fn_cointopay_base64url_encode($s));
-}
-function fn_cointopay_base64url_encode($data) {
-	return strtoupper(rtrim(strtr(base64_encode($data), '+/', '-_'), '='));
-}
 function fn_cointopay_flash_encode($input)
 {
 	return rawurlencode(utf8_encode($input));

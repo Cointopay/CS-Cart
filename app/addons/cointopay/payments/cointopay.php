@@ -31,13 +31,6 @@ if (defined('PAYMENT_NOTIFICATION'))
 				echo $transactionData['message'];
 				 exit;
 			}
-			$value_data = "MerchantID=" . $transactionData['data']['MerchantID'] . "&AltCoinID=" . $transactionData['data']['AltCoinID'] . "&TransactionID=" . $transactionID . "&coinAddress=" . $transactionData['data']['coinAddress'] . "&CustomerReferenceNr=" . 
-$_GET['CustomerReferenceNr'] . "&SecurityCode=" . $transactionData['data']['SecurityCode'] . "&inputCurrency=" . $transactionData['data']['inputCurrency'];
-            $ConfirmCode = fn_cointopay_calculateRFC2104HMAC($pp['api_key'], $value_data);
-			if($ConfirmCode !== $_GET['ConfirmCode']){
-				echo "Data mismatch! Data doesn\'t match with Cointopay.";
-               exit;
-			}
            $response = fn_cointopay_validate_order($data);
            
            if($response->Status !== $_GET['status'])
