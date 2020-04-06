@@ -35,7 +35,7 @@ if (defined('PAYMENT_NOTIFICATION'))
            
            if($response->Status !== $_GET['status'])
            {
-               echo "We have detected different order status. Your order has been halted.";
+               echo "We have detected different order status. Your order status is ".$response->Status;
                exit;
            }
            if($response->CustomerReferenceNr == $_GET['CustomerReferenceNr'])

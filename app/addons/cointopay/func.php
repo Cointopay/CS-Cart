@@ -29,11 +29,7 @@ function  fn_cointopay_validate_order($data)
        );
        $response = curl_exec($ch);
        $results = json_decode($response);
-       if($results->CustomerReferenceNr)
-       {
-           return $results;
-       }
-       echo $response;
+       return $results;
        exit();
 }
 function  fn_cointopay_transactiondetail($data)
@@ -56,10 +52,6 @@ function  fn_cointopay_transactiondetail($data)
        );
        $response = curl_exec($ch);
        $results = json_decode($response, true);
-       /*if($results->CustomerReferenceNr)
-       {
-           return $results;
-       }*/
        return $results;
        exit();
 }

@@ -5,6 +5,8 @@
 
 Required: CSCART Latest Version Installed
 
+Please follow the CS-Cart Cointopay Plugin install instructions mentioned here: <a href="https://docs.google.com/document/d/1CImYcFrSUUT1FCDcv7UpM_JUe1oAQnSFvETpXZ7bJCg/edit?usp=sharing">download CS-Cart Cointopay Plugin documentation</a> or direct link: https://docs.google.com/document/d/1CImYcFrSUUT1FCDcv7UpM_JUe1oAQnSFvETpXZ7bJCg/edit?usp=sharing
+
 1:- Put the zip or rar file on the root directory of your website.
 
 2:- Righ click on the file (zip or rar) and click on Extract here.
