@@ -31,7 +31,46 @@ if (defined('PAYMENT_NOTIFICATION'))
 				echo $transactionData['message'];
 				 exit;
 			}
-           $response = fn_cointopay_validate_order($data);
+			else{
+				if($transactionData['data']['Security'] != $_GET['ConfirmCode']){
+					echo "Data mismatch! ConfirmCode doesn\'t match";
+					exit;
+				}
+				elseif($transactionData['data']['CustomerReferenceNr'] != $_GET['CustomerReferenceNr']){
+					echo "Data mismatch! CustomerReferenceNr doesn\'t match";
+					exit;
+				}
+				elseif($transactionData['data']['TransactionID'] != $_GET['TransactionID']){
+					echo "Data mismatch! TransactionID doesn\'t match";
+					exit;
+				}
+				elseif($transactionData['data']['AltCoinID'] != $_GET['AltCoinID']){
+					echo "Data mismatch! AltCoinID doesn\'t match";
+					exit;
+				}
+				elseif($transactionData['data']['MerchantID'] != $_GET['MerchantID']){
+					echo "Data mismatch! MerchantID doesn\'t match";
+					exit;
+				}
+				elseif($transactionData['data']['coinAddress'] != $_GET['CoinAddressUsed']){
+					echo "Data mismatch! coinAddress doesn\'t match";
+					exit;
+				}
+				elseif($transactionData['data']['SecurityCode'] != $_GET['SecurityCode']){
+					echo "Data mismatch! SecurityCode doesn\'t match";
+					exit;
+				}
+				elseif($transactionData['data']['inputCurrency'] != $_GET['inputCurrency']){
+					echo "Data mismatch! inputCurrency doesn\'t match";
+					exit;
+				}
+				elseif($transactionData['data']['Status'] != $_GET['status']){
+					echo "Data mismatch! status doesn\'t match. Your order status is ".$transactionData['data']['Status'];
+					exit;
+				}
+
+				}
+          /* $response = fn_cointopay_validate_order($data);
            
            if($response->Status !== $_GET['status'])
            {
@@ -39,7 +78,7 @@ if (defined('PAYMENT_NOTIFICATION'))
                exit;
            }
            if($response->CustomerReferenceNr == $_GET['CustomerReferenceNr'])
-           {
+           {*/
                 //if paid
                 if($paymentStatus == 'paid' && $notEngough == '0')
                 {
@@ -78,11 +117,11 @@ if (defined('PAYMENT_NOTIFICATION'))
                     fn_order_placement_routines('route', $order_id);
                 }
            }
-        }
+        /*}
         else
         {
             die('We have detected changes in your order. Your order has been halted.');
-        } 
+        } */
         
     }
     exit;
